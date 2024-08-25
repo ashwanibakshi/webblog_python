@@ -13,4 +13,5 @@ If any one of the above will be missing then you will get an smtp error.
 Check the links below
 
 https://stackoverflow.com/questions/72576024/smtplib-smtpauthenticationerror-535-b5-7-8-username-and-password-not-accepte
+
 https://stackoverflow.com/questions/60701936/error-invalid-login-application-specific-password-required
