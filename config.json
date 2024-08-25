@@ -1,0 +1,8 @@
+{
+    "params":{
+        "local_server_url":"mysql://root:root@localhost/pythonblog",
+        "production_server_url":"",
+        "email_user":"ab324002@gmail.com",
+        "email_password":""
+    }
+}

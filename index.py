@@ -1,7 +1,12 @@
 from flask import Flask,request,render_template
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase,Mapped,MappedColumn
+from flask_mail import Mail,Message
 import datetime
+import json
+
+with open('config.json','r') as c:
+    params = json.load(c) ['params']
 
 app = Flask(__name__)
 
@@ -10,9 +15,19 @@ class Base(DeclarativeBase):
 
 db = SQLAlchemy(model_class=Base)
 
-app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root:root@localhost/pythonblog"
+app.config["SQLALCHEMY_DATABASE_URI"] = params["local_server_url"]
 
 db.init_app(app)
+
+app.config.update(
+    MAIL_SERVER ="smtp.gmail.com",
+    MAIL_PORT   = 465,
+    MAIL_USE_SSL = True,
+    MAIL_USERNAME = params["email_user"],
+    MAIL_PASSWORD = params["email_password"]
+)
+mail = Mail(app)
+
 
 class article(db.Model):
     id: Mapped[int] = MappedColumn(primary_key=True)
@@ -31,24 +46,31 @@ class Contact(db.Model):
     subject  : Mapped[str] = MappedColumn(nullable=False)
     phno : Mapped[str] = MappedColumn(nullable=False)
 
-@app.route('/home',methods=["GET"])
+@app.route('/',methods=["GET"])
 def home():
-    return render_template('home.html')
+    return render_template('home.html',params="Home")
 
 @app.route('/contact',methods=["GET","POST"])
 def contact():
     if (request.method=="POST"):
        namee     = request.form.get("name")
-       mail    = request.form.get("email")
+       emaill    = request.form.get("email")
        message      = request.form.get("msg")
        locationn = request.form.get("location")
        sub  = request.form.get("subject")
        number = request.form.get("phno")
 
-       entry = Contact(name=namee,email=mail,msg=message,location=locationn,subject=sub,phno=number)
+       entry = Contact(name=namee,email=emaill,msg=message,location=locationn,subject=sub,phno=number)
        db.session.add(entry)
        db.session.commit()
-       
+       msg= Message(
+            subject="Message from the blog",
+            sender= (namee,emaill),
+            recipients=[params["email_user"]],
+            body = locationn+'\n'+sub+'\n'+number +'\n'+message 
+       )
+       mail.send(msg)
+    return render_template('contact.html',params="Contact Us") 
 
-    return render_template('contact.html') 
+
 app.run(port=5000,debug=True)
