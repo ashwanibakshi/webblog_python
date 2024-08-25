@@ -5,7 +5,7 @@ from flask_mail import Mail,Message
 import datetime
 import json
 
-with open('config.json','r') as c:
+with open('.\config\config.json','r') as c:
     params = json.load(c) ['params']
 
 app = Flask(__name__)
