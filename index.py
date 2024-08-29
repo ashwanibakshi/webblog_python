@@ -1,10 +1,9 @@
-from flask import Flask,request,render_template
-from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import DeclarativeBase,Mapped,MappedColumn
+from flask import Flask,request,render_template,redirect,flash
 from flask_mail import Mail,Message
 from flask_bcrypt import Bcrypt
-import datetime
+from flask_login import LoginManager,login_required
 import json
+from models.dbModels import db,Article,Contact,Users
 
 
 
@@ -13,11 +12,8 @@ with open('.\config\config.json','r') as c:
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
-
-class Base(DeclarativeBase):
-  pass
-
-db = SQLAlchemy(model_class=Base)
+# login_manger = LoginManager()
+# login_manger.init_app(app)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = params["local_server_url"]
 
@@ -28,28 +24,11 @@ app.config.update(
     MAIL_PORT     = 465,
     MAIL_USE_SSL  = True,
     MAIL_USERNAME = params["email_user"],
-    MAIL_PASSWORD = params["email_password"]
+    MAIL_PASSWORD = params["email_password"],
+    SECRET_KEY    = "Secret@123"
 )
 mail = Mail(app)
 
-
-class Article(db.Model):
-    id: Mapped[int]      = MappedColumn(primary_key=True)
-    title: Mapped[str]   = MappedColumn(unique=True,nullable=False)
-    content: Mapped[str] = MappedColumn(nullable=False)
-    author : Mapped[str] = MappedColumn(nullable=False)
-    slug: Mapped[str]    = MappedColumn(nullable=False)
-    date : Mapped[datetime.datetime] = MappedColumn(nullable=False)
-
-class Contact(db.Model):
-    sno: Mapped[int]        = MappedColumn(primary_key=True,autoincrement = True)
-    name: Mapped[str]       = MappedColumn(nullable=False)
-    email: Mapped[str]      = MappedColumn(nullable=False)
-    msg: Mapped[str]        = MappedColumn(nullable=False)
-    location: Mapped[str]   = MappedColumn(nullable=False)
-    subject: Mapped[str]    = MappedColumn(nullable=False)
-    phno : Mapped[str]      = MappedColumn(nullable=False)
-    date:Mapped[datetime.datetime] = MappedColumn(nullable=False)
 
 @app.route('/',methods=["GET"])
 def home():
@@ -86,13 +65,30 @@ def contact():
 
 @app.route('/login',methods=["GET","POST"])
 def login():
+    if(request.method=="POST"):
+        user = Users.query.filter_by(email=request.form.get("email")).first()
+        if (user is not None and user.is_valid()):
+            pwd  = request.form.get("password")
+            if(bcrypt.check_password_hash(user.password,pwd)):
+                return redirect('/dashboard')
+        else:
+            flash('Wrong Email Password','danger')  
     return render_template('login.html')
 
 @app.route('/register',methods=["GET","POST"])
 def register():
     if(request.method=="POST"):
-      password = request.form.get("password")
-      pwd = bcrypt.generate_password_hash(password)
+      user = Users(
+          name     = request.form.get("name"),
+          email    = request.form.get("email"),
+          password = bcrypt.generate_password_hash(request.form.get("password"))
+      )
+      db.session.add(user)
+      db.session.commit()
     return render_template('register.html')
+
+@app.route('/dashboard',methods=["GET"])
+def dash():
+    return render_template('dashboard.html')
 
 app.run(port=5000,debug=True)
