@@ -168,7 +168,13 @@
   <form action="/register" method="post" >
     <img class="mb-4" src="https://getbootstrap.com/docs/5.3/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">
     <h1 class="h3 mb-3 fw-normal">Please sign up</h1>
-
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+         <div class="alert alert-{{ category }}" role="alert"> {{ message }}</div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
     <div class="form-floating">
         <input type="text" class="form-control" id="floatingInput" placeholder="enter name" name="name">
         <label for="floatingInput">Enter name</label>

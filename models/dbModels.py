@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase,Mapped,MappedColumn
+from flask_login import UserMixin
 import datetime
 
 class Base(DeclarativeBase):
@@ -28,8 +29,8 @@ class Contact(db.Model):
     date:Mapped[datetime.datetime] = MappedColumn(nullable=False)
 
 
-class Users(db.Model):
-   uid   :Mapped[int]           = MappedColumn(primary_key=True,autoincrement=True)
+class Users(UserMixin,db.Model):
+   id   :Mapped[int]           = MappedColumn(primary_key=True,autoincrement=True)
    name  : Mapped[str]          = MappedColumn(nullable=False)
    email : Mapped[str]          = MappedColumn(nullable=False)
    password : Mapped[str]       = MappedColumn(nullable=False)

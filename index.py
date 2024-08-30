@@ -1,7 +1,7 @@
-from flask import Flask,request,render_template,redirect,flash
+from flask import Flask,request,render_template,redirect,flash,session
 from flask_mail import Mail,Message
 from flask_bcrypt import Bcrypt
-from flask_login import LoginManager,login_required
+from flask_login import LoginManager,login_required, login_user,current_user, logout_user
 import json
 from models.dbModels import db,Article,Contact,Users
 
@@ -12,8 +12,10 @@ with open('.\config\config.json','r') as c:
 
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
-# login_manger = LoginManager()
-# login_manger.init_app(app)
+
+login_manger = LoginManager()
+login_manger.login_view='login'
+login_manger.init_app(app)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = params["local_server_url"]
 
@@ -29,6 +31,10 @@ app.config.update(
 )
 mail = Mail(app)
 
+@login_manger.user_loader
+def load_user(user_id):
+    print('df',user_id)
+    return Users.query.filter_by(id=int(user_id)).first()
 
 @app.route('/',methods=["GET"])
 def home():
@@ -66,29 +72,45 @@ def contact():
 @app.route('/login',methods=["GET","POST"])
 def login():
     if(request.method=="POST"):
-        user = Users.query.filter_by(email=request.form.get("email")).first()
-        if (user is not None and user.is_valid()):
+        users = Users.query.filter_by(email=request.form.get("email")).first() 
+        if (users is not None):
             pwd  = request.form.get("password")
-            if(bcrypt.check_password_hash(user.password,pwd)):
+            if(bcrypt.check_password_hash(users.password,pwd)):
+                login_user(users,False,None,True,True)
+                session.permanent=True
                 return redirect('/dashboard')
+            else:
+              flash('Wrong Email Password','danger')  
         else:
-            flash('Wrong Email Password','danger')  
+           flash('User Is Not Registered','danger')  
     return render_template('login.html')
 
 @app.route('/register',methods=["GET","POST"])
 def register():
     if(request.method=="POST"):
-      user = Users(
+      users = Users.query.filter_by(email=request.form.get('email')).first()
+      if (users is not None): 
+       flash('User Already Registered','danger')  
+      else:
+       user = Users(
           name     = request.form.get("name"),
           email    = request.form.get("email"),
           password = bcrypt.generate_password_hash(request.form.get("password"))
-      )
-      db.session.add(user)
-      db.session.commit()
+       )
+       db.session.add(user)
+       db.session.commit() 
     return render_template('register.html')
 
 @app.route('/dashboard',methods=["GET"])
+@login_required
 def dash():
-    return render_template('dashboard.html')
+    return render_template('dashboard.html',data=current_user.name)
+
+
+@app.route('/logout',methods=["Get"])
+def logout():
+    logout_user()
+    session.clear()
+    return redirect('login')
 
 app.run(port=5000,debug=True)
