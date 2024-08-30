@@ -1,4 +1,4 @@
-from flask import Flask,request,render_template,redirect,flash,session
+from flask import Flask,request,render_template,redirect,flash,session, url_for
 from flask_mail import Mail,Message
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager,login_required, login_user,current_user, logout_user
@@ -33,7 +33,6 @@ mail = Mail(app)
 
 @login_manger.user_loader
 def load_user(user_id):
-    print('df',user_id)
     return Users.query.filter_by(id=int(user_id)).first()
 
 @app.route('/',methods=["GET"])
@@ -76,8 +75,10 @@ def login():
         if (users is not None):
             pwd  = request.form.get("password")
             if(bcrypt.check_password_hash(users.password,pwd)):
-                login_user(users,False,None,True,True)
-                session.permanent=True
+                if(request.form.get('remember') is not None):
+                   login_user(users,True)
+                else:   
+                    login_user(users,False)   
                 return redirect('/dashboard')
             else:
               flash('Wrong Email Password','danger')  
@@ -107,10 +108,9 @@ def dash():
     return render_template('dashboard.html',data=current_user.name)
 
 
-@app.route('/logout',methods=["Get"])
+@app.route('/logout',methods=["GET"])
 def logout():
     logout_user()
-    session.clear()
-    return redirect('login')
+    return redirect(url_for('login'))
 
 app.run(port=5000,debug=True)
