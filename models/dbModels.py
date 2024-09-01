@@ -8,13 +8,6 @@ class Base(DeclarativeBase):
 
 db = SQLAlchemy(model_class=Base)
 
-class Article(db.Model):
-    id: Mapped[int]      = MappedColumn(primary_key=True)
-    title: Mapped[str]   = MappedColumn(unique=True,nullable=False)
-    content: Mapped[str] = MappedColumn(nullable=False)
-    author : Mapped[str] = MappedColumn(nullable=False)
-    slug: Mapped[str]    = MappedColumn(nullable=False)
-    date : Mapped[datetime.datetime] = MappedColumn(nullable=False)
 
 
 
@@ -31,7 +24,16 @@ class Contact(db.Model):
 
 class Users(UserMixin,db.Model):
    id   :Mapped[int]           = MappedColumn(primary_key=True,autoincrement=True)
-   name  : Mapped[str]          = MappedColumn(nullable=False)
-   email : Mapped[str]          = MappedColumn(nullable=False)
-   password : Mapped[str]       = MappedColumn(nullable=False)
-   image : Mapped[str]          = MappedColumn(nullable=True)
+   name  : Mapped[str]         = MappedColumn(nullable=False)
+   email : Mapped[str]         = MappedColumn(nullable=False)
+   password : Mapped[str]      = MappedColumn(nullable=False)
+   image : Mapped[str]         = MappedColumn(nullable=True)
+
+
+class Article(db.Model):
+    id      : Mapped[int]         = MappedColumn(primary_key=True,autoincrement=True)
+    title   : Mapped[str]         = MappedColumn(nullable=False)
+    content : Mapped[str]         = MappedColumn(nullable=False)  
+    slug    : Mapped[str]         = MappedColumn(nullable=False)  
+    authorId: Mapped[int]         = MappedColumn(nullable=False)
+    date    : Mapped[str]         = MappedColumn(nullable=True) 

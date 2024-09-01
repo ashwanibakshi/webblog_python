@@ -1,1 +1,90 @@
-<h1>{{post.title}}</h1>
+{%extends "layouts.html"%} {%block body%}
+<div class="col-md-9">
+  <div class="col-md-12 page-body">
+    <div class="row">
+      <div class="sub-title">
+        <a href="/" title="Go to Home Page"><h2>Back Home</h2></a>
+        <a href="#comment" class="smoth-scroll"><i class="icon-bubbles"></i></a>
+      </div>
+
+      <div class="col-md-12 content-page">
+        <div class="col-md-12 blog-post">
+          <!-- Post Headline Start -->
+          <div class="post-title">
+            <h1>{{post.title}}</h1>
+          </div>
+          <!-- Post Headline End -->
+
+          <!-- Post Detail Start -->
+          <div class="post-info">
+            <span
+              >{{post.date}} / by
+              <a href="#" target="_blank">{{post.name}}</a></span
+            >
+          </div>
+          <!-- Post Detail End -->
+          <p>{{post.content}}</p>
+
+          <!-- Post List Style End -->
+
+          <!-- Post Author Bio Box Start -->
+          <div class="about-author margin-top-70 margin-bottom-50">
+            <div class="picture">
+              <img
+                src="/static/images/blog/author.png"
+                class="img-responsive"
+                alt=""
+              />
+            </div>
+
+            <div class="c-padding">
+              <h3>
+                Article By
+                <a
+                  href="#"
+                  target="_blank"
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  title="Visit Alex Website"
+                  >{{post.name}}</a
+                >
+              </h3>
+              <p>
+                You can use about author box when someone guest post on your
+                blog, Lorem ipsum consectetur adipiscing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna ad minim veniam.
+              </p>
+            </div>
+          </div>
+          <!-- Post Author Bio Box End -->
+
+          <!-- You May Also Like Start
+          <div class="you-may-also-like margin-top-50 margin-bottom-50">
+            <h3>You may also like</h3>
+             <div class="row">
+         
+            <div class="col-md-4 col-sm-6 col-xs-12">
+              <a href="single.html"><p>Make mailchimp singup form working with ajax using jquery plugin</p></a>
+             </div>
+
+            <div class="col-md-4 col-sm-6 col-xs-12">
+              <a href="single.html"><p>How to design elegant e-mail newsletter in html for wish christmas to your subscribers?</p></a>
+             </div>
+
+            <div class="col-md-4 col-sm-6 col-xs-12">
+              <a href="single.html"><p>How to customize a wordpress theme entirely from scratch using a child theme?</p></a>
+             </div>
+            
+            </div>
+          </div> -->
+          <!-- You May Also Like End -->
+
+          <!-- Post Comment (Disqus) Start -->
+          <!-- Post Comment (Disqus) End -->
+        </div>
+      </div>
+    </div>
+
+    {%endblock%}
+  </div>
+</div>

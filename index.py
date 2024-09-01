@@ -3,6 +3,8 @@ from flask_mail import Mail,Message
 from flask_bcrypt import Bcrypt
 from flask_login import LoginManager,login_required, login_user,current_user, logout_user
 import json
+
+from slugify import slugify
 from models.dbModels import db,Article,Contact,Users
 
 
@@ -40,10 +42,11 @@ def home():
     articles = Article.query.filter() [0:5]
     return render_template('home.html',params="Home",posts=articles)
 
-@app.route('/blog/<slug>',methods=["GET"])
-def blog(slug):
-    article = Article.query.filter_by(slug=slug).first()
-    return render_template('blog.html',params=slug,post=article)
+@app.route('/blog/<slugg>',methods=["GET"])
+def blog(slugg):
+    article = Article.query.filter_by(slug=slugg).join(Users,Article.authorId==Users.id).add_columns(Users.name,Article.id,Article.title,Article.slug,Article.content,Article.date).first()  
+    print(article)
+    return render_template('blog.html',params=slugg,post=article)
 
 @app.route('/contact',methods=["GET","POST"])
 def contact():
@@ -79,7 +82,7 @@ def login():
                    login_user(users,True)
                 else:   
                     login_user(users,False)   
-                return redirect('/dashboard')
+                return redirect('dashboard')
             else:
               flash('Wrong Email Password','danger')  
         else:
@@ -105,12 +108,39 @@ def register():
 @app.route('/dashboard',methods=["GET"])
 @login_required
 def dash():
-    return render_template('dashboard.html',data=current_user.name)
+    return render_template('/dashboard/dashboard.html',data=current_user.name)
 
+@app.route('/addpost',methods=["GET","POST"])
+@login_required
+def addpost():
+    if(request.method=="POST"):
+        article = Article(
+           title    = request.form.get("title"),
+           slug     = slugify(request.form.get("slug")),
+           content  = request.form.get("content"),
+           authorId = request.form.get("authorId")
+        )
+        db.session.add(article)
+        db.session.commit()
+    return render_template('/dashboard/addpost.html',author=current_user.name, authorId=current_user.id)
+
+
+@app.route('/editpost/<id>/<uid>',methods=["GET"])
+def editGet(id,uid):
+     postData = Article.query.filter_by(id=id,authorId=uid).first() 
+     return render_template('/dashboard/editpost.html',data=postData)
+
+@app.route('/editpost',methods=["POST"])
+def editPost():
+    editData = Article(
+       title = request.form.get("title")   
+    )
+
+    return redirect('dashboard')
 
 @app.route('/logout',methods=["GET"])
 def logout():
     logout_user()
-    return redirect(url_for('login'))
+    return redirect('login')
 
 app.run(port=5000,debug=True)

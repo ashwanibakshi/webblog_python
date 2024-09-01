@@ -3,3 +3,4 @@ flask-sqlalchemy
 flask-mail
 flask-bcrypt
 flask_login
+python-slugify
