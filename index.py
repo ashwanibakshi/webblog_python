@@ -1,3 +1,4 @@
+import math
 from flask import Flask,request,render_template,redirect,flash,session, url_for
 from flask_mail import Mail,Message
 from flask_bcrypt import Bcrypt
@@ -39,8 +40,26 @@ def load_user(user_id):
 
 @app.route('/',methods=["GET"])
 def home():
-    articles = Article.query.filter() [0:5]
-    return render_template('home.html',params="Home",posts=articles)
+    articles = Article.query.filter().all()
+    
+    page = request.args.get('page')
+    last = math.ceil(len(articles)/int(params['no_of_posts']))
+
+    if (not str(page).isnumeric()):
+      page = 1
+      
+    page = int(page)  
+    articles = articles[(page-1)*int(params['no_of_posts']):(page-1)*int(params['no_of_posts'])+int(params['no_of_posts'])]
+    if page==1:
+     prev = "#"
+     next = "/?page="+ str(page+1)
+    elif page==last:
+     prev = "/?page="+ str(page-1)
+     next = "#"
+    else:
+     prev = "/?page="+ str(page-1)
+     next = "/?page="+ str(page+1)
+    return render_template('home.html',params="Home",posts=articles,prev=prev,next=next)
 
 @app.route('/blog/<slugg>',methods=["GET"])
 def blog(slugg):

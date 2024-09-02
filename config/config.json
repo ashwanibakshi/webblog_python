@@ -1,8 +1,9 @@
 {
-    "params":{
-        "local_server_url":"mysql://root:root@localhost/pythonblog",
-        "production_server_url":"",
-        "email_user":"",
-        "email_password":""
-    }
+  "params": {
+    "local_server_url": "mysql://root:root@localhost/pythonblog",
+    "production_server_url": "",
+    "email_user": "",
+    "email_password": "",
+    "no_of_posts": 2
+  }
 }

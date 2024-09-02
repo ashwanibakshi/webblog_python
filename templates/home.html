@@ -1,41 +1,44 @@
-{% extends "layouts.html" %}
-{%block body%}
-                                    
-                  <!-- Blog Post (Right Sidebar) Start -->
-                  <div class="col-md-9">
-                     <div class="col-md-12 page-body">
-                         <div class="row">
-                             
-                             
-                             <div class="sub-title">
-                                    <h2>My Blog</h2>
-                                 <a href="/contact"><i class="icon-envelope"></i></a>
-                              </div>
-                             
-                             
-                             <div class="col-md-12 content-page">
-                                 
-                                {%for post in posts %} 
-                                 <!-- Blog Post Start -->
-                                 <div class="col-md-12 blog-post">
-                                     <div class="post-title">
-                                       <a href="/blog/{{post.slug}}"><h1>{{post.title}}</h1></a>
-                                     </div>  
-                                     <div class="post-info">
-                                         <span>{{post.date}} / by <a href="#" target="_blank">{{post.author}}</a></span>
-                                     </div>  
-                                     <p>{{post.content [0:40]}}</p>                          			
-                                     <a href="/blog/{{post.slug}}" class="button button-style button-anim fa fa-long-arrow-right"><span>Read More</span></a>
-                                 </div>
-                                 <!-- Blog Post End -->
-                                 {%endfor %} 
-                                 <div class="col-md-12 text-center">
-                                  <a href="javascript:void(0)" id="load-more-post" class="load-more-button">Load</a>
-                                  <div id="post-end-message"></div>
-                                 </div>
-                                 
-                              </div>
-                               
-                          </div>
-                        
-   {%endblock%}                       
+{% extends "layouts.html" %} {%block body%}
+
+<!-- Blog Post (Right Sidebar) Start -->
+<div class="col-md-9">
+  <div class="col-md-12 page-body">
+    <div class="row">
+      <div class="sub-title">
+        <h2>My Blog</h2>
+        <a href="/contact"><i class="icon-envelope"></i></a>
+      </div>
+
+      <div class="col-md-12 content-page">
+        {%for post in posts %}
+        <!-- Blog Post Start -->
+        <div class="col-md-12 blog-post">
+          <div class="post-title">
+            <a href="/blog/{{post.slug}}"><h1>{{post.title}}</h1></a>
+          </div>
+          <div class="post-info">
+            <span
+              >{{post.date}} / by
+              <a href="#" target="_blank">{{post.author}}</a></span
+            >
+          </div>
+          <p>{{post.content [0:40]}}</p>
+          <a
+            href="/blog/{{post.slug}}"
+            class="button button-style button-anim fa fa-long-arrow-right"
+            ><span>Read More</span></a
+          >
+        </div>
+        <!-- Blog Post End -->
+        {%endfor %}
+        <div class="col-md-12">
+          <a href="{{prev}}" class="btn btn-lg" style="float: left">Previous</a>
+          <a href="{{next}}" class="btn btn-lg" style="float: right">Next</a>
+          <div id="post-end-message"></div>
+        </div>
+      </div>
+    </div>
+
+    {%endblock%}
+  </div>
+</div>
