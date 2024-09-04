@@ -1,36 +1,55 @@
-{%extends "/dashboard/layouts.html" %}
-{%block body%}
+{%extends "/dashboard/layouts.html" %} {%block body%}
 <div class="container-fluid">
-
-    <!-- Page Heading -->
-    <div class="card">
-        <div class="card-header h3">
-          Edit Post
+  <!-- Page Heading -->
+  <div class="card">
+    <div class="card-header h3">Edit Post</div>
+    <div class="card-body">
+      <form action="/updatepost" method="post">
+        <div class="form-group">
+          <label for="inputAddress">Title</label>
+          <input
+            type="text"
+            class="form-control"
+            id="inputEmail4"
+            placeholder="Title"
+            name="title"
+            value="{{data.title}}"
+            required
+          />
         </div>
-        <div class="card-body">
-            <form action="/editpost" method="post">
-                
-                  <div class="form-group">
-                    <label for="inputAddress">Title</label>
-                    <input type="text" class="form-control" id="inputEmail4" placeholder="Title" name="title" value="{{data.title}}" required>
-                  </div>
-                  
-                <div class="form-group">
-                  <label for="inputAddress">Slug</label>
-                  <input type="text" class="form-control" id="inputAddress" placeholder="Slug" name="slug" value="{{data.slug}}" required>
-                </div>
-                <div class="form-group">
-                  <label for="inputAddress2">Content</label>
-                  <!-- <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor"> -->
-                 <textarea class="form-control" rows="7" name="content"  required>{{data.content}}</textarea>
-                </div>
-                <div class="form-group">
-                    <input type="text" name="id" id="aid" value="{{data.id}}" hidden>
-                </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
-              </form>
-        </div>
-      </div>
 
+        <div class="form-group">
+          <label for="inputAddress">Slug</label>
+          <input
+            type="text"
+            class="form-control"
+            id="inputAddress"
+            placeholder="Slug"
+            name="slug"
+            value="{{data.slug}}"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="inputAddress2">Content</label>
+          <!-- <input type="text" class="form-control" id="inputAddress2" placeholder="Apartment, studio, or floor"> -->
+          <textarea class="form-control" rows="7" name="content" required>
+{{data.content}}</textarea
+          >
+        </div>
+        <div class="form-group">
+          <input type="text" name="id" id="aid" value="{{data.id}}" hidden />
+          <input
+            type="text"
+            name="authorid"
+            id="aid"
+            value="{{data.authorId}}"
+            hidden
+          />
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+  </div>
 </div>
 {%endblock%}

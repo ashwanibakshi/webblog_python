@@ -1,31 +1,33 @@
-{%extends "/dashboard/layouts.html"%}
-{%block body%}
+{%extends "/dashboard/layouts.html"%} {%block body%}
 
+<div class="container-fluid">
+  <!-- Page Heading -->
+  <!-- <h1 class="h3 mb-2 text-gray-800">Blog Data</h1> -->
 
-  <div class="container-fluid">
-
-    <!-- Page Heading -->
-    <!-- <h1 class="h3 mb-2 text-gray-800">Blog Data</h1> -->
-
-    <!-- DataTales Example -->
-    <div class="card shadow mb-4">
-        <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Blog Data</h6>
-        </div>
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                    <thead>
-                        <tr>
-                            <th>Id</th>
-                            <th>Title</th>
-                            <th>Slug</th>
-                            <th>Date</th>
-                            <th>Edit</th>
-                            <th>Delete</th>
-                        </tr>
-                    </thead>
-                    <!-- <tfoot>
+  <!-- DataTales Example -->
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">Blog Data</h6>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table
+          class="table table-bordered"
+          id="dataTable"
+          width="100%"
+          cellspacing="0"
+        >
+          <thead>
+            <tr>
+              <th>Id</th>
+              <th>Title</th>
+              <th>Slug</th>
+              <th>Date</th>
+              <th>Edit</th>
+              <th>Delete</th>
+            </tr>
+          </thead>
+          <!-- <tfoot>
                         <tr>
                             <th>Name</th>
                             <th>Position</th>
@@ -35,22 +37,42 @@
                             <th>Salary</th>
                         </tr>
                     </tfoot> -->
-                    <tbody>
-                        <tr>
-                            <td>Tiger Nixon</td>
-                            <td>System Architect</td>
-                            <td>Edinburgh</td>
-                            <td>61</td>
-                            <td>2011/04/25</td>
-                            <td>$320,800</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+          <tbody>
+            {%for data in blogs%}
+            <tr>
+              <td>{{loop.index}}</td>
+              <td>{{data.title}}</td>
+              <td>{{data.slug}}</td>
+              <td>{{data.date}}</td>
+              <td>
+                <form action="/editpost" method="POST">
+                  <input type="submit" value="edit" />
+                  <input type="hidden" name="blogid" value="{{data.id}}" />
+                  <input
+                    type="hidden"
+                    name="authorid"
+                    value="{{data.authorId}}"
+                  />
+                </form>
+              </td>
+              <td>
+                <form action="/deletepost" method="POST">
+                  <input type="submit" value="delete" />
+                  <input type="hidden" name="blogid" value="{{data.id}}" />
+                  <input
+                    type="hidden"
+                    name="authorid"
+                    value="{{data.authorId}}"
+                  />
+                </form>
+              </td>
+            </tr>
+            {%endfor%}
+          </tbody>
+        </table>
+      </div>
     </div>
-
+  </div>
 </div>
-
 
 {%endblock%}

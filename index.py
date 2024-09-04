@@ -127,7 +127,9 @@ def register():
 @app.route('/dashboard',methods=["GET"])
 @login_required
 def dash():
-    return render_template('/dashboard/dashboard.html',data=current_user.name)
+    dashData = Article.query.filter_by(authorId=current_user.id).all()
+    print(dashData)
+    return render_template('/dashboard/dashboard.html',blogs=dashData,params="DashBoard",aid=current_user.id)
 
 @app.route('/addpost',methods=["GET","POST"])
 @login_required
@@ -141,25 +143,55 @@ def addpost():
         )
         db.session.add(article)
         db.session.commit()
-    return render_template('/dashboard/addpost.html',author=current_user.name, authorId=current_user.id)
+    return render_template('/dashboard/addpost.html',author=current_user.name, authorId=current_user.id,params="Add Post",aid=current_user.id)
 
-
-@app.route('/editpost/<id>/<uid>',methods=["GET"])
-def editGet(id,uid):
-     postData = Article.query.filter_by(id=id,authorId=uid).first() 
-     return render_template('/dashboard/editpost.html',data=postData)
 
 @app.route('/editpost',methods=["POST"])
+@login_required
 def editPost():
-    editData = Article(
-       title = request.form.get("title")   
-    )
+     uid = request.form.get("authorid")
+     id  = request.form.get("blogid")
+     postData = Article.query.filter_by(id=id,authorId=uid).first() 
+     return render_template('/dashboard/editpost.html',data=postData,params="Edit Post",aid=current_user.id)
 
-    return redirect('dashboard')
+@app.route('/updatepost',methods=["POST"])
+@login_required
+def updatePost():
+    editData = Article.query.filter_by(id=request.form.get("id"),authorId=request.form.get("authorid")).first()
+    editData.title   = request.form.get("title")
+    editData.slug    = request.form.get("slug")
+    editData.content = request.form.get("content")
+    db.session.commit()
+    return redirect('/dashboard')
+
+@app.route('/deletepost',methods=["POST"])
+@login_required
+def delete():
+   Article.query.filter_by(id=request.form.get('blogid'),authorId=request.form.get("authorid")).delete()
+   db.session.commit()
+   return redirect('/dashboard')
+
+
+@app.route('/profile/<aid>',methods=["GET"])
+@login_required
+def profile(aid):
+   uData = Users.query.filter_by(id=aid).first()
+   return render_template('/dashboard/profile.html',data=uData)
+
+@app.route('/profile',methods=["POST"])
+@login_required
+def profilee():
+    uData = Users.query.filter_by(id=request.form.get("authorid")).first()
+    uData.email = request.form.get("email")
+    uData.name  = request.form.get("name")
+
+    db.session.commit();
+    return redirect('/dashboard')
+
 
 @app.route('/logout',methods=["GET"])
 def logout():
     logout_user()
-    return redirect('login')
+    return redirect('../login')
 
 app.run(port=5000,debug=True)

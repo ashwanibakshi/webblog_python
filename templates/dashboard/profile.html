@@ -1,0 +1,54 @@
+{%extends "/dashboard/layouts.html"%} {%block body%}
+<div class="container-fluid">
+  <!-- Page Heading -->
+  <!-- <h1 class="h3 mb-2 text-gray-800">Blog Data</h1> -->
+
+  <!-- DataTales Example -->
+  <div class="card shadow mb-4">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">Blog Data</h6>
+    </div>
+    <div class="card-body">
+      <form action="/profile" method="post">
+        <div class="form-group">
+          <label for="exampleInputEmail1">Name</label>
+          <input
+            type="text"
+            class="form-control"
+            id="exampleInputEmail1"
+            aria-describedby="emailHelp"
+            name="name"
+            value="{{data.name}}"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="exampleInputEmail1">Email address</label>
+          <input
+            type="email"
+            class="form-control"
+            id="exampleInputEmail1"
+            aria-describedby="emailHelp"
+            name="email"
+            value="{{data.email}}"
+            required
+          />
+        </div>
+        <!-- <div class="form-group">
+          <label for="exampleInputPassword1">New Password</label>
+          <input
+            type="password"
+            class="form-control"
+            id="exampleInputPassword1"
+            name="password"
+            placeholder="Enter New Password"
+          />
+        </div> -->
+        <input type="text" value="{{data.id}}" name="authorid" hidden />
+        <button type="submit" class="btn btn-primary">Submit</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+{%endblock%}
