@@ -176,7 +176,7 @@ def delete():
 @login_required
 def profile(aid):
    uData = Users.query.filter_by(id=aid).first()
-   return render_template('/dashboard/profile.html',data=uData)
+   return render_template('/dashboard/profile.html',data=uData,aid=current_user.id)
 
 @app.route('/profile',methods=["POST"])
 @login_required
@@ -192,6 +192,6 @@ def profilee():
 @app.route('/logout',methods=["GET"])
 def logout():
     logout_user()
-    return redirect('../login')
+    return redirect('login')
 
 app.run(port=5000,debug=True)

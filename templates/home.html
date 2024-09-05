@@ -6,7 +6,7 @@
     <div class="row">
       <div class="sub-title">
         <h2>My Blog</h2>
-        <a href="/contact"><i class="icon-envelope"></i></a>
+        <a href="{{url_for("contact")}}"><i class="icon-envelope"></i></a>
       </div>
 
       <div class="col-md-12 content-page">
@@ -14,17 +14,17 @@
         <!-- Blog Post Start -->
         <div class="col-md-12 blog-post">
           <div class="post-title">
-            <a href="/blog/{{post.slug}}"><h1>{{post.title}}</h1></a>
+            <a href="{{url_for("blog",slugg=post.slug)}}"><h1>{{post.title}}</h1></a>
           </div>
           <div class="post-info">
             <span
               >{{post.date}} / by
-              <a href="#" target="_blank">{{post.author}}</a></span
+              <a href="#">{{post.author}}</a></span
             >
           </div>
           <p>{{post.content [0:40]}}</p>
           <a
-            href="/blog/{{post.slug}}"
+            href="{{url_for("blog",slugg=post.slug)}}"
             class="button button-style button-anim fa fa-long-arrow-right"
             ><span>Read More</span></a
           >

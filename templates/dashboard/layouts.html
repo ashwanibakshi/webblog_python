@@ -44,14 +44,14 @@
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item">
-                <a class="nav-link" href="dashboard">
+                <a class="nav-link" href="{{url_for("dash")}}">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item">
-                <a class="nav-link" href="addpost">
+                <a class="nav-link" href="{{url_for("addpost")}}">
                     <i class="fas fa-fw fa-light fa-pen"></i> 
                     <span>Add Blog</span></a>
             </li>
@@ -240,7 +240,7 @@
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
                                 
-                                <a class="dropdown-item" href="profile/"+{{aid}}>
+                                <a class="dropdown-item" href="{{url_for('profile',aid=aid)}}">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Profile
                                 </a>
@@ -253,7 +253,7 @@
                                     Activity Log
                                 </a> -->
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="logout" data-toggle="modal" data-target="#logoutModal">
+                                <a class="dropdown-item" href="{{url_for("logout")}}" data-toggle="modal" data-target="#logoutModal">
                                     <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Logout
                                 </a>
@@ -308,7 +308,7 @@
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="logout">Logout</a>
+                    <a class="btn btn-primary" href="{{url_for('logout')}}">Logout</a>
                 </div>
             </div>
         </div>
