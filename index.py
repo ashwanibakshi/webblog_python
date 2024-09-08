@@ -6,7 +6,7 @@ from flask_login import login_required, login_user,current_user, logout_user
 import json
 
 from slugify import slugify
-from controllers.controller import addPost, dashboard, getData, registerr,slug,contacts,loginn,getLoginManager
+from controllers.controller import addPost, dashboard, deletePostt, editPostt, getData, registerr,slug,contacts,loginn,getLoginManager, updatePostt
 from models.dbModels import Article,Contact,Users,db
 
 
@@ -90,27 +90,20 @@ def addpost():
 @app.route('/editpost',methods=["POST"])
 @login_required
 def editPost():
-     uid = request.form.get("authorid")
-     id  = request.form.get("blogid")
-     postData = Article.query.filter_by(id=id,authorId=uid).first() 
-     return render_template('/dashboard/editpost.html',data=postData,params="Edit Post",aid=current_user.id)
+     data = editPostt(request)  
+     return render_template(data["page"],data=data["data"],params=data["params"],aid=data["aid"])
 
 @app.route('/updatepost',methods=["POST"])
 @login_required
 def updatePost():
-    editData = Article.query.filter_by(id=request.form.get("id"),authorId=request.form.get("authorid")).first()
-    editData.title   = request.form.get("title")
-    editData.slug    = request.form.get("slug")
-    editData.content = request.form.get("content")
-    db.session.commit()
-    return redirect('/dashboard')
+    data = updatePostt(request)
+    return redirect(data["page"])
 
 @app.route('/deletepost',methods=["POST"])
 @login_required
 def delete():
-   Article.query.filter_by(id=request.form.get('blogid'),authorId=request.form.get("authorid")).delete()
-   db.session.commit()
-   return redirect('/dashboard')
+   data = deletePostt(request)
+   return redirect(data["page"])
 
 
 @app.route('/profile/<aid>',methods=["GET"])

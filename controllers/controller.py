@@ -192,3 +192,34 @@ def addPost(request):
    "aid"     : current_user.id
    }
    return data
+
+def editPostt(request):
+     uid = request.form.get("authorid")
+     id  = request.form.get("blogid")
+     postData = Article.query.filter_by(id=id,authorId=uid).first() 
+     data={
+        "page"  :'/dashboard/editpost.html',
+        "data"  : postData,
+        "params": "Edit Post",
+        "aid"   : current_user.id
+     }
+     return data
+
+def updatePostt(request):
+    editData = Article.query.filter_by(id=request.form.get("id"),authorId=request.form.get("authorid")).first()
+    editData.title   = request.form.get("title")
+    editData.slug    = request.form.get("slug")
+    editData.content = request.form.get("content")
+    db.session.commit()
+    data={
+       "page":'/dashboard'
+    }
+    return data
+
+def deletePostt(request):
+   Article.query.filter_by(id=request.form.get('blogid'),authorId=request.form.get("authorid")).delete()
+   db.session.commit()
+   data={
+      "page":"/dashboard"
+   }
+   return data
