@@ -223,3 +223,30 @@ def deletePostt(request):
       "page":"/dashboard"
    }
    return data
+
+def getProfile(request,aid):
+   uData = Users.query.filter_by(id=aid).first()
+   data={
+      "page":'/dashboard/profile.html',
+      "data": uData,
+      "aid" : current_user.id
+   }
+   return data
+
+def updateProfile(request):
+    uData = Users.query.filter_by(id=request.form.get("authorid")).first()
+    uData.email = request.form.get("email")
+    uData.name  = request.form.get("name")
+
+    db.session.commit();
+    data={
+       "page":'/dashboard'
+    }
+    return data
+
+def logOut():
+   logout_user()
+   data={
+      "page":"login"
+   }
+   return data

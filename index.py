@@ -6,7 +6,7 @@ from flask_login import login_required, login_user,current_user, logout_user
 import json
 
 from slugify import slugify
-from controllers.controller import addPost, dashboard, deletePostt, editPostt, getData, registerr,slug,contacts,loginn,getLoginManager, updatePostt
+from controllers.controller import addPost, dashboard, deletePostt, editPostt, getData, getProfile, logOut, registerr,slug,contacts,loginn,getLoginManager, updatePostt, updateProfile
 from models.dbModels import Article,Contact,Users,db
 
 
@@ -109,23 +109,19 @@ def delete():
 @app.route('/profile/<aid>',methods=["GET"])
 @login_required
 def profile(aid):
-   uData = Users.query.filter_by(id=aid).first()
-   return render_template('/dashboard/profile.html',data=uData,aid=current_user.id)
+   data = getProfile(request,aid)
+   return render_template(data["page"],data=data["data"],aid=data["aid"])
 
 @app.route('/profile',methods=["POST"])
 @login_required
 def profilee():
-    uData = Users.query.filter_by(id=request.form.get("authorid")).first()
-    uData.email = request.form.get("email")
-    uData.name  = request.form.get("name")
-
-    db.session.commit();
-    return redirect('/dashboard')
+    data = updateProfile(request)
+    return redirect(data["page"])
 
 
 @app.route('/logout',methods=["GET"])
 def logout():
-    logout_user()
-    return redirect('login')
+    data = logOut()
+    return redirect(data["page"])
 
 app.run(port=5000,debug=True)
